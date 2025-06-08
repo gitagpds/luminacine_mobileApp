@@ -1,4 +1,4 @@
-# luminacine
+# LUMINACINE
 
 A new Flutter project.
 
