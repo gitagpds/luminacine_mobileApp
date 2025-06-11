@@ -34,16 +34,11 @@ class User {
   String? password;
   String? role;
 
-  User(
-    {this.idUser, 
-    this.name, 
-    this.email,
-    this.password, 
-    this.role
-  });
+  User({this.idUser, this.name, this.email, this.password, this.role});
 
   User.fromJson(Map<String, dynamic> json) {
-    idUser = json['idUser'];
+    idUser = json['id_user'];
+    //git, ini namanya salah git aakkkhhhhh 
     name = json['name'];
     email = json['email'];
     password = json['password'];
