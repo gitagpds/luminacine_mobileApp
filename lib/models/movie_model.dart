@@ -47,13 +47,15 @@ class Movie {
   });
 
   Movie.fromJson(Map<String, dynamic> json) {
-    idMovie = json['idMovie'];
+    idMovie = json['id_movie'];
+    //cuy yang bener aje, ini juga satu kasus
     title = json['title'];
     sinopsis = json['sinopsis'];
     genre = json['genre'];
-    duration = json['duration'];
+    duration = json['duration']?.toString();
     releaseDate = json['releaseDate'];
-    posterUrl = json['posterUrl'];
+    posterUrl = json['poster_url'];
+    //Salah nama lagi banggggg akkkhhhh
   }
 
   Map<String, dynamic> toJson() {

@@ -49,6 +49,17 @@ class MovieService {
     return Movie.fromJson(body['data']);
   }
 
+  // ✅ DELETE /movies/:id
+  static Future<void> deleteMovie(int id) async {
+    final response = await http.delete(
+      Uri.parse("$baseUrl/movies/$id"),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to delete movie.");
+    }
+  }
+
   // (Opsional) ✅ POST /movies - create movie dengan upload poster multipart
   static Future<Movie> uploadMovieWithPoster({
     required Map<String, String> fields,

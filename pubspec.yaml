@@ -39,6 +39,7 @@ dependencies:
   http_parser: ^4.0.2
   # url_launcher: ^6.2.5
   google_fonts: ^6.2.1 
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
