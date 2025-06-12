@@ -27,15 +27,17 @@ class MovieService {
   }
 
   // ✅ PUT /movies/:id
-  static Future<Movie> updateMovie(
+  static Future<void> updateMovie(
       int id, Map<String, dynamic> updatedPayload) async {
     final response = await http.put(
       Uri.parse("$baseUrl/movies/$id"),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(updatedPayload),
     );
-    final body = jsonDecode(response.body);
-    return Movie.fromJson(body['data']);
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to update movie.");
+    }
   }
 
   // (Opsional) ✅ POST /movies - create movie biasa

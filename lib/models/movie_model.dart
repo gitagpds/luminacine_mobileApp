@@ -53,7 +53,7 @@ class Movie {
     sinopsis = json['sinopsis'];
     genre = json['genre'];
     duration = json['duration']?.toString();
-    releaseDate = json['releaseDate'];
+    releaseDate = json['release_date'];
     posterUrl = json['poster_url'];
     //Salah nama lagi banggggg akkkhhhh
   }
