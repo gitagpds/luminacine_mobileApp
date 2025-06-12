@@ -32,7 +32,6 @@ class UserHomePageState extends State<UserHomePage> {
     }
   }
 
-  // ✅ Ditambahkan: method agar bisa dipanggil dari halaman lain seperti HistoryPage
   void switchToTab(int index) {
     setState(() {
       _selectedIndex = index;
@@ -163,6 +162,20 @@ class __UserHomeContentState extends State<_UserHomeContent> {
     super.dispose();
   }
 
+  Widget _buildHorizontalMovieList(List<Movie> movies) {
+    return SizedBox(
+      height: 300,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: movies.length,
+        itemBuilder: (context, index) => SizedBox(
+          width: 240,
+          child: UserMovieCard(movie: movies[index]),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -225,24 +238,50 @@ class __UserHomeContentState extends State<_UserHomeContent> {
               ),
             ),
             const SizedBox(height: 8),
-            if (_isLoading)
-              const Expanded(child: Center(child: CircularProgressIndicator()))
-            else if (_filteredMovies.isEmpty)
-              const Expanded(child: Center(child: Text('Film tidak ditemukan.')))
-            else
-              Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.fromLTRB(30, 10, 16, 70),
-                  itemCount: _filteredMovies.length,
-                  itemBuilder: (context, index) {
-                    return SizedBox(
-                      width: 280,
-                      child: UserMovieCard(movie: _filteredMovies[index]),
-                    );
-                  },
-                ),
-              ),
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView(
+                      padding: const EdgeInsets.fromLTRB(30, 10, 30, 130),
+                      children: [
+                        if (_filteredMovies.isNotEmpty) ...[
+                          const Text(
+                            'MOVIES',
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 10),
+                          _buildHorizontalMovieList(_filteredMovies),
+                          const SizedBox(height: 20),
+                        ],
+                        const Text(
+                          '2025 MOVIES',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10),
+                        _buildHorizontalMovieList(
+                          _allMovies.where((m) => m.releaseDate?.startsWith('2025') ?? false).toList(),
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'ANIMATION MOVIES',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10),
+                        _buildHorizontalMovieList(
+                          _allMovies.where((m) => (m.genre ?? '').toLowerCase().contains('animation')).toList(),
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'HORROR MOVIES',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10),
+                        _buildHorizontalMovieList(
+                          _allMovies.where((m) => (m.genre ?? '').toLowerCase().contains('horror')).toList(),
+                        ),
+                      ],
+                    ),
+            ),
           ],
         ),
       ),

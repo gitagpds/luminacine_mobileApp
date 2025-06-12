@@ -95,17 +95,23 @@ class _HistoryPageState extends State<HistoryPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: 90, // Lebar tetap untuk semua label
+          width: 90,
           child: Text(
             label,
-            style: const TextStyle(color: Colors.grey),
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 12,
+            ),
           ),
         ),
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+            ),
           ),
         ),
       ],
@@ -137,7 +143,7 @@ class _HistoryPageState extends State<HistoryPage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text("My Booking History",
-            style: TextStyle(color: Colors.white)),
+            style: TextStyle(color: Colors.white, fontSize: 18)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
@@ -154,7 +160,7 @@ class _HistoryPageState extends State<HistoryPage> {
       body: bookings.isEmpty
           ? const Center(
               child: Text("You have no bookings yet.",
-                  style: TextStyle(color: Colors.grey)),
+                  style: TextStyle(color: Colors.grey, fontSize: 14)),
             )
           : ListView.builder(
               padding: const EdgeInsets.all(12),
@@ -190,53 +196,29 @@ class _HistoryPageState extends State<HistoryPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      movie?.title ?? "Unknown Movie",
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      const Text("Cinema",
-                                          style: TextStyle(color: Colors.grey)),
-                                      Text(
-                                        schedule?['cinema_name'] ?? '-',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                              Text(
+                                movie?.title ?? "Unknown Movie",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                               const SizedBox(height: 16),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  buildInfoRow(
-                                      "Order ID", "${booking.idBooking}"),
-                                  const SizedBox(height: 8),
-                                  buildInfoRow(
-                                      "Date", formatDate(schedule?['date'])),
-                                  const SizedBox(height: 8),
-                                  buildInfoRow(
-                                      "Time", schedule?['time'] ?? '-'),
-                                  const SizedBox(height: 8),
-                                  buildInfoRow("Cost",
-                                      "Rp ${booking.totalPrice?.toStringAsFixed(0) ?? '0'}"),
-                                ],
-                              ),
+                              buildInfoRow(
+                                  "Order ID", "${booking.idBooking}"),
+                              const SizedBox(height: 8),
+                              buildInfoRow(
+                                  "Cinema", schedule?['cinema_name'] ?? '-'),
+                              const SizedBox(height: 8),
+                              buildInfoRow(
+                                  "Date", formatDate(schedule?['date'])),
+                              const SizedBox(height: 8),
+                              buildInfoRow(
+                                  "Time", schedule?['time'] ?? '-'),
+                              const SizedBox(height: 8),
+                              buildInfoRow("Cost",
+                                  "Rp ${booking.totalPrice?.toStringAsFixed(0) ?? '0'}"),
                               const SizedBox(height: 16),
                               Align(
                                 alignment: Alignment.centerRight,

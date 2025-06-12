@@ -39,7 +39,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   Future<void> _fetchData() async {
     try {
       final movie = await MovieService.getMovieById(widget.idMovie);
-      final schedules = await ScheduleService.getSchedulesByMovieId(widget.idMovie);
+      final schedules =
+          await ScheduleService.getSchedulesByMovieId(widget.idMovie);
+
       setState(() {
         _movie = movie;
         _schedules = schedules;
@@ -63,14 +65,21 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     }
 
     if (_error.isNotEmpty) {
-      return Scaffold(body: Center(child: Text(_error, style: TextStyle(color: Colors.red))));
+      return Scaffold(
+        body: Center(
+          child: Text(_error, style: const TextStyle(color: Colors.red)),
+        ),
+      );
     }
 
     if (_movie == null) {
-      return const Scaffold(body: Center(child: Text("Film tidak ditemukan")));
+      return const Scaffold(
+        body: Center(child: Text("Film tidak ditemukan")),
+      );
     }
 
-    final uniqueDates = _schedules.map((s) => s.date).whereType<String>().toSet().toList();
+    final uniqueDates =
+        _schedules.map((s) => s.date).whereType<String>().toSet().toList();
     final filtered = _schedules.where((s) => s.date == _selectedDate).toList();
 
     return Scaffold(
@@ -80,28 +89,50 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (_movie!.posterUrl != null && _movie!.posterUrl!.isNotEmpty)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(_movie!.posterUrl!, height: 250, fit: BoxFit.cover),
-              ),
+            // Poster + Info Movie
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    _movie!.posterUrl ?? '',
+                    height: 160,
+                    width: 110,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _movie?.title ?? 'Tanpa Judul',
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      if (_movie?.genre != null && _movie!.genre!.isNotEmpty)
+                        Text(_movie!.genre!),
+                      const SizedBox(height: 4),
+                      if (_movie?.releaseDate != null)
+                        Text(DateFormat('yyyy')
+                            .format(DateTime.parse(_movie!.releaseDate!))),
+                    ],
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 16),
-            Text(
-              _movie?.title ?? 'Tanpa Judul',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '${_movie?.genre ?? 'Genre'} • '
-              '${_movie?.releaseDate != null ? DateFormat('yyyy').format(DateTime.parse(_movie!.releaseDate!)) : 'Unknown'}',
-              style: const TextStyle(color: Colors.white70),
-            ),
-            const SizedBox(height: 8),
+
+            // Sinopsis
             Text(
               _movie?.sinopsis ?? 'Sinopsis tidak tersedia.',
+              textAlign: TextAlign.justify,
               style: const TextStyle(fontSize: 14),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
 
             // Date Selector
             Wrap(
@@ -110,12 +141,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               children: uniqueDates.map((date) {
                 final selected = _selectedDate == date;
                 return ChoiceChip(
-                  label: Text(DateFormat('dd MMM EEE').format(DateTime.parse(date))),
+                  label: Text(
+                      DateFormat('dd MMM EEE').format(DateTime.parse(date))),
                   selected: selected,
                   onSelected: (_) {
                     setState(() {
                       _selectedDate = date;
-                      _selectedScheduleId = null; // reset waktu
+                      _selectedScheduleId = null;
                     });
                   },
                 );
@@ -124,6 +156,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
             const SizedBox(height: 16),
 
+            // Schedule List
             if (filtered.isEmpty)
               const Text("Tidak ada jadwal tayang untuk tanggal ini.")
             else
@@ -131,7 +164,21 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 final isSelected = _selectedScheduleId == s.idSchedule;
                 return Card(
                   child: ListTile(
-                    title: Text('${s.cinemaName ?? '-'} - ${s.studio ?? '-'}'),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (s.cinemaName != null && s.cinemaName!.isNotEmpty)
+                          Text(
+                            s.cinemaName!,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        if (s.studio != null && s.studio!.isNotEmpty)
+                          Text(
+                            s.studio!,
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                      ],
+                    ),
                     subtitle: Text('Rp ${s.price?.toStringAsFixed(0) ?? '0'}'),
                     trailing: GestureDetector(
                       onTap: () {
@@ -140,7 +187,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         });
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
                           color: isSelected ? Colors.amber : Colors.grey[850],
                           borderRadius: BorderRadius.circular(20),
@@ -161,6 +209,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
             const SizedBox(height: 20),
 
+            // Book Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -170,8 +219,6 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         final selected = filtered.firstWhere(
                           (s) => s.idSchedule == _selectedScheduleId,
                         );
-
-                        // ✅ Arahkan ke halaman ChooseSeatPage
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -185,7 +232,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                           ),
                         );
                       },
-                child: Text(widget.isReschedule ? 'Reschedule Now' : 'Book Now'),
+                child:
+                    Text(widget.isReschedule ? 'Reschedule Now' : 'Book Now'),
               ),
             ),
           ],

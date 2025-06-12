@@ -41,7 +41,6 @@ class _TicketPageState extends State<TicketPage> {
 
       final movie = await MovieService.getMovieById(scheduleJson['id_movie']);
 
-      // Ambil seat code dari response API booking-detail (karena model Booking tidak punya 'seats')
       final bookingResponse = await http.get(Uri.parse(
           "https://luminacine-be-901699795850.us-central1.run.app/booking-detail/${widget.bookingId}"));
       final seatJson = jsonDecode(bookingResponse.body)['data']['seats'];
@@ -84,31 +83,34 @@ class _TicketPageState extends State<TicketPage> {
         backgroundColor: Colors.black,
         title: const Text("Your Ticket", style: TextStyle(color: Colors.white)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.yellow),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/home', (route) => false);
+            }),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator(color: Colors.white))
           : error.isNotEmpty
-              ? Center(child: Text(error, style: const TextStyle(color: Colors.red)))
+              ? Center(
+                  child: Text(error, style: const TextStyle(color: Colors.red)))
               : ticketContent(),
     );
   }
 
   Widget ticketContent() {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 180),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
         ),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 30, 16, 16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ROW POSTER + INFO
             Row(
               children: [
                 ClipRRect(
@@ -128,30 +130,53 @@ class _TicketPageState extends State<TicketPage> {
                       Text(
                         movieData?['title'] ?? '-',
                         style: const TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold),
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       const Text(
                         "Show this ticket at the entrance!",
                         style: TextStyle(color: Colors.grey),
                       ),
-                      const Divider(color: Colors.grey, height: 24),
-                      ticketInfo("Cinema", scheduleData?['cinema_name']),
-                      ticketInfo("Date", formatDate(scheduleData?['date'] ?? '')),
-                      ticketInfo("Time", scheduleData?['time']),
-                      ticketInfo("Seat", seatCodes.join(', ')),
-                      ticketInfo("Cost", "Rp. ${booking!.totalPrice?.toStringAsFixed(0)}"),
-                      ticketInfo("Order ID", "${booking!.idBooking}"),
+                      const SizedBox(height: 12),
+                      Text(
+                        scheduleData?['cinema_name'] ?? '-',
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                      Text(
+                        formatDate(scheduleData?['date'] ?? ''),
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                      Text(
+                        scheduleData?['time'] ?? '-',
+                        style: const TextStyle(color: Colors.black),
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
+
             const SizedBox(height: 24),
-            Image.asset(
-              'assets/images/barcode.png',
-              height: 80,
-              fit: BoxFit.contain,
+            const Divider(color: Colors.grey),
+
+            // INFO DI BAWAH
+            ticketInfo("Seat", seatCodes.join(', ')),
+            ticketInfo(
+                "Cost", "Rp. ${booking!.totalPrice?.toStringAsFixed(0)}"),
+            ticketInfo("Order ID", "${booking!.idBooking}"),
+
+            const SizedBox(height: 24),
+
+            // BARCODE
+            Center(
+              child: Image.asset(
+                'assets/images/barcode.png',
+                height: 80,
+                fit: BoxFit.contain,
+              ),
             ),
           ],
         ),
@@ -165,12 +190,23 @@ class _TicketPageState extends State<TicketPage> {
       child: Row(
         children: [
           SizedBox(
-              width: 90,
-              child: Text(label,
-                  style: const TextStyle(fontWeight: FontWeight.bold))),
+            width: 90,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ),
           Expanded(
-              child: Text(value ?? '-',
-                  style: const TextStyle(color: Colors.black))),
+            child: Text(
+              value ?? '-',
+              style: const TextStyle(
+                color: Colors.black,
+              ),
+            ),
+          ),
         ],
       ),
     );

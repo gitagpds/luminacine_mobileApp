@@ -53,8 +53,10 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
   Future<void> _fetchData() async {
     try {
       final movie = await MovieService.getMovieById(widget.movieId);
-      final schedules = await ScheduleService.getSchedulesByMovieId(widget.movieId);
-      final schedule = schedules.firstWhere((s) => s.idSchedule == widget.scheduleId);
+      final schedules =
+          await ScheduleService.getSchedulesByMovieId(widget.movieId);
+      final schedule =
+          schedules.firstWhere((s) => s.idSchedule == widget.scheduleId);
 
       setState(() {
         _movie = movie;
@@ -133,28 +135,20 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
       return const Scaffold(
         backgroundColor: Colors.black,
         body: Center(
-          child: Text('Data tidak ditemukan', style: TextStyle(color: Colors.white)),
+          child: Text('Data tidak ditemukan',
+              style: TextStyle(color: Colors.white)),
         ),
       );
     }
 
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(title: const Text('🧾 Ringkasan Pemesanan')),
+      appBar: AppBar(title: const Text('🧾 Order Summary')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Text(
-                'Order Summary',
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.yellow,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -183,12 +177,16 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                         const SizedBox(height: 8),
                         Text(
                           _schedule!.cinemaName ?? '',
-                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white),
                         ),
-                        Text('Studio: ${_schedule!.studio}', style: const TextStyle(color: Colors.white70)),
+                        Text('Studio: ${_schedule!.studio}',
+                            style: const TextStyle(color: Colors.white70)),
                         Text(
-                          DateFormat('EEEE, dd MMMM yyyy • HH:mm', 'id_ID').format(
-                            DateTime.parse('${_schedule!.date} ${_schedule!.time}'),
+                          DateFormat('EEEE, dd MMMM yyyy • HH:mm', 'id_ID')
+                              .format(
+                            DateTime.parse(
+                                '${_schedule!.date} ${_schedule!.time}'),
                           ),
                           style: const TextStyle(color: Colors.white70),
                         ),
@@ -208,14 +206,19 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('🎟️ Detail Pesanan',
-                        style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
+                    const Text('🎟️ Order Details',
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
                     if (_orderId != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: Text(
                           'ORDER ID: $_orderId',
-                          style: const TextStyle(color: Colors.yellowAccent, fontFamily: 'monospace'),
+                          style: const TextStyle(
+                              color: Colors.yellowAccent,
+                              fontFamily: 'monospace'),
                         ),
                       ),
                     const SizedBox(height: 8),
@@ -236,21 +239,34 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                     Text(
                       'Total: ${currency.format(totalPrice)}',
                       style: const TextStyle(
-                          color: Colors.yellowAccent, fontSize: 16, fontWeight: FontWeight.bold),
+                          color: Colors.yellowAccent,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _orderId != null ? null : _handleBooking,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _orderId != null ? Colors.green : Colors.yellow,
-                  foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _orderId != null ? null : _handleBooking,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        _orderId != null ? Colors.green : Colors.yellow,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16), // tinggi tombol
+                    textStyle: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(_orderId != null
+                      ? '✅ BOOKING SUCCESS!'
+                      : '🎫 CONFIRM BOOKING'),
                 ),
-                child: Text(_orderId != null ? '✅ BOOKING SUCCESS!' : '🎫 CONFIRM BOOKING'),
               ),
             ],
           ),

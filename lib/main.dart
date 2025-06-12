@@ -34,6 +34,13 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
 
+      // ✅ Tambahkan route static di sini
+      routes: {
+        '/home': (context) => const UserHomePage(),
+        '/login': (context) => const LoginPage(),
+      },
+
+      // ✅ Dynamic routing (seperti /ticket/123)
       onGenerateRoute: (settings) {
         final uri = Uri.parse(settings.name ?? '');
 
@@ -53,6 +60,7 @@ class MyApp extends StatelessWidget {
         );
       },
 
+      // ✅ Halaman pertama tergantung login
       home: FutureBuilder<String?>(
         future: _checkAuthStatus(),
         builder: (context, snapshot) {

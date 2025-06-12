@@ -164,6 +164,31 @@ class _ChooseSeatPageState extends State<ChooseSeatPage> {
     );
   }
 
+  Widget _buildScreenIndicator() {
+    return Column(
+      children: [
+        const Text(
+          'Screen',
+          style: TextStyle(
+            color: Colors.yellow,
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Container(
+          height: 4,
+          width: 200,
+          decoration: BoxDecoration(
+            color: Colors.yellow,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
   Future<void> _goToOrderSummary() async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt('idUser') ?? 0;
@@ -197,50 +222,81 @@ class _ChooseSeatPageState extends State<ChooseSeatPage> {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(title: const Text('Pilih Kursi')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      appBar: AppBar(title: const Text('Choose Seat')),
+      body: SafeArea(
         child: Column(
           children: [
-            Expanded(child: _buildSeatGrid()),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
                   children: [
-                    Text('${_selectedSeats.length} Kursi',
-                        style: const TextStyle(color: Colors.white)),
+                    _buildScreenIndicator(),
+                    Expanded(child: _buildSeatGrid()),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Text(
+                          '${_selectedSeats.length} Kursi',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        const Spacer(),
+                        Text(
+                          'Rp ${total.toStringAsFixed(0)}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 8),
+
+                    // Tambahkan garis horizontal di atas row
+                    Container(
+                      height: 1,
+                      color: Colors.white24, // Bisa disesuaikan warnanya
+                      margin: EdgeInsets.only(
+                          bottom: 20), // Jarak antara garis dan Row
+                    ),
+
                     Row(children: const [
                       _Legend(color: Color(0xFF3A3A3A), label: 'Tersedia'),
-                      SizedBox(width: 12),
+                      SizedBox(width: 70),
                       _Legend(color: Colors.white, label: 'Terisi'),
-                      SizedBox(width: 12),
+                      SizedBox(width: 70),
                       _Legend(color: Colors.yellow, label: 'Dipilih'),
                     ]),
                   ],
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text('Rp ${total.toStringAsFixed(0)}',
-                        style: const TextStyle(color: Colors.white)),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed:
-                          _selectedSeats.isEmpty ? null : _goToOrderSummary,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellow,
-                        foregroundColor: Colors.black,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(16),
+              color: Colors.black,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ElevatedButton(
+                    onPressed:
+                        _selectedSeats.isEmpty ? null : _goToOrderSummary,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.yellow,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                      child: const Text('Pay Now'),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                  ],
-                ),
-              ],
-            )
+                    child: const Text('Pay Now'),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

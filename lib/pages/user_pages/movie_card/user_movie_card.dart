@@ -21,19 +21,19 @@ class UserMovieCard extends StatelessWidget {
       }
     })();
 
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      elevation: 4,
-      margin: const EdgeInsets.only(right: 16),
-      child: Container(
-        width: 280,
-        padding: const EdgeInsets.only(bottom: 8),
+    return SizedBox(
+      width: 240,
+      height: 290, // fixed height to avoid overflow
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        elevation: 4,
+        margin: const EdgeInsets.only(right: 16),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Poster
             Container(
-              height: 440,
+              height: 160, // Adjusted to leave more space for text/buttons
               width: double.infinity,
               color: Colors.grey[900],
               child: hasImage
@@ -47,8 +47,10 @@ class UserMovieCard extends StatelessWidget {
                       child: Icon(Icons.hide_image_outlined,
                           color: Colors.white54, size: 40)),
             ),
+
+            // Movie Info
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -62,7 +64,6 @@ class UserMovieCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: Text(
@@ -83,11 +84,12 @@ class UserMovieCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
                         backgroundColor: theme.colorScheme.secondary,
                         foregroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
@@ -105,7 +107,7 @@ class UserMovieCard extends StatelessWidget {
                       },
                       child: const Text('Detail'),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
