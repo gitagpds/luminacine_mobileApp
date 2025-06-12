@@ -38,7 +38,6 @@ class User {
 
   User.fromJson(Map<String, dynamic> json) {
     idUser = json['id_user'];
-    //git, ini namanya salah git aakkkhhhhh 
     name = json['name'];
     email = json['email'];
     password = json['password'];

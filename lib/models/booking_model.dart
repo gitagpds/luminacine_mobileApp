@@ -41,10 +41,10 @@ class Booking {
   });
 
   Booking.fromJson(Map<String, dynamic> json) {
-    idBooking = json['idBooking'];
-    idUser = json['idUser'];
-    idSchedule = json['idSchedule'];
-    totalPrice = json['totalPrice'];
+    idBooking = json['id_booking'];
+    idUser = json['id_user'];
+    idSchedule = json['id_schedule'];
+    totalPrice = json['total_price'];
   }
 
   Map<String, dynamic> toJson() {

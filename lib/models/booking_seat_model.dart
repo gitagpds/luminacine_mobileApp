@@ -37,8 +37,8 @@ class BookingSeat {
   });
 
   BookingSeat.fromJson(Map<String, dynamic> json) {
-    idBooking = json['idBooking'];
-    idSeat = json['idSeat'];
+    idBooking = json['id_booking'];
+    idSeat = json['id_seat'];
   }
 
   Map<String, dynamic> toJson() {

@@ -47,9 +47,9 @@ class Schedule {
   });
 
   Schedule.fromJson(Map<String, dynamic> json) {
-    idSchedule = json['idSchedule'];
-    idMovie = json['idMovie'];
-    cinemaName = json['cinemaName'];
+    idSchedule = json['id_schedule'];
+    idMovie = json['id_movie'];
+    cinemaName = json['cinema_name'];
     studio = json['studio'];
     date = json['date'];
     time = json['time'];

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../models/schedule_model.dart';
 
@@ -20,11 +21,19 @@ class ScheduleService {
 
   // ✅ GET /movies/:movieId/schedules/:id
   static Future<Schedule> getScheduleDetail(int movieId, int scheduleId) async {
-    final response = await http
-        .get(Uri.parse("$baseUrl/movies/$movieId/schedules/$scheduleId"));
-    final body = jsonDecode(response.body);
-    return Schedule.fromJson(body['data']);
-  }
+  final response = await http.get(
+    Uri.parse("$baseUrl/movies/$movieId/schedules/$scheduleId"),
+  );
+
+  debugPrint('📦 Schedule Detail Response: ${response.body}');
+
+  final body = jsonDecode(response.body);
+
+  // 💡 langsung parse JSON karena tidak ada 'status' / 'data'
+  return Schedule.fromJson(body);
+}
+
+
 
   // ✅ POST /movies/:movieId/schedules
   static Future<Schedule> createSchedule(
