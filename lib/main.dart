@@ -34,7 +34,6 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
 
-      // ✅ Tambahkan handler route dinamis seperti /ticket/31
       onGenerateRoute: (settings) {
         final uri = Uri.parse(settings.name ?? '');
 
@@ -47,7 +46,6 @@ class MyApp extends StatelessWidget {
           }
         }
 
-        // fallback jika tidak ditemukan
         return MaterialPageRoute(
           builder: (_) => const Scaffold(
             body: Center(child: Text('404 - Halaman tidak ditemukan')),
@@ -55,7 +53,6 @@ class MyApp extends StatelessWidget {
         );
       },
 
-      // ✅ Halaman utama ditentukan setelah cek token & role
       home: FutureBuilder<String?>(
         future: _checkAuthStatus(),
         builder: (context, snapshot) {

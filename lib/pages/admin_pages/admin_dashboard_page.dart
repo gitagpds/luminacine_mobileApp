@@ -2,21 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:luminacine/models/movie_model.dart';
 import 'package:luminacine/pages/admin_pages/add_movie_page.dart';
-import 'package:luminacine/pages/admin_pages/movie_card/admin_movie_card.dart';
+import 'package:luminacine/pages/admin_pages/edit_movie_page.dart';
+import 'package:luminacine/pages/admin_pages/card/admin_movie_card.dart';
+import 'package:luminacine/pages/admin_pages/schedule_page.dart';
 import 'package:luminacine/pages/login_page.dart';
 import 'package:luminacine/services/movie_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-class AdminSchedulePage extends StatelessWidget {
-  const AdminSchedulePage({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Atur Jadwal Film')),
-      body: const Center(child: Text('Halaman untuk mengatur jadwal.')),
-    );
-  }
-}
 
 class AdminDashboardPage extends StatefulWidget {
   const AdminDashboardPage({super.key});
@@ -269,7 +260,17 @@ class _AdminHomeContentState extends State<AdminHomeContent> {
                     final movie = _filteredMovies[index];
                     return AdminMovieCard(
                       movie: movie,
-                      onEdit: () {/* TODO: Navigasi ke halaman Edit */},
+                      onEdit: () async {
+                        final result = await Navigator.push<bool>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditMoviePage(movie: movie),
+                          ),
+                        );
+                        if (result == true) {
+                          _loadMovies();
+                        }
+                      },
                       onDelete: () => _deleteMovie(movie.idMovie!),
                     );
                   },
