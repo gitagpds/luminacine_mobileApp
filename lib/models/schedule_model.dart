@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class ScheduleModel {
   String? status;
   String? message;
@@ -47,9 +49,10 @@ class Schedule {
   });
 
   Schedule.fromJson(Map<String, dynamic> json) {
-    idSchedule = json['idSchedule'];
-    idMovie = json['idMovie'];
-    cinemaName = json['cinemaName'];
+    debugPrint('DATA JSON YANG DITERIMA Schedule.fromJson: $json');
+    idSchedule = json['id_schedule'];
+    idMovie = json['id_movie'];
+    cinemaName = json['cinema_name'];
     studio = json['studio'];
     date = json['date'];
     time = json['time'];

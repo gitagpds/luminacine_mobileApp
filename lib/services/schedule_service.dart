@@ -27,27 +27,36 @@ class ScheduleService {
   }
 
   // ✅ POST /movies/:movieId/schedules
-  static Future<Schedule> createSchedule(
+  static Future<void> createSchedule(
       int movieId, Map<String, dynamic> schedulePayload) async {
+    // URL diubah kembali untuk menyertakan movieId
     final response = await http.post(
       Uri.parse("$baseUrl/movies/$movieId/schedules"),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(schedulePayload),
     );
-    final body = jsonDecode(response.body);
-    return Schedule.fromJson(body['data']);
+
+    // Cukup periksa status code. 201 berarti "Created".
+    if (response.statusCode != 201) {
+      throw Exception(
+          "Failed to create schedule. Status code: ${response.statusCode}");
+    }
   }
 
   // ✅ PUT /movies/:movieId/schedules/:id
-  static Future<Schedule> updateSchedule(
+  static Future<void> updateSchedule(
       int movieId, int scheduleId, Map<String, dynamic> updatedPayload) async {
     final response = await http.put(
       Uri.parse("$baseUrl/movies/$movieId/schedules/$scheduleId"),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(updatedPayload),
     );
-    final body = jsonDecode(response.body);
-    return Schedule.fromJson(body['data']);
+
+    // Cukup periksa status code. 200 berarti "OK".
+    if (response.statusCode != 200) {
+      throw Exception(
+          "Failed to update schedule. Status code: ${response.statusCode}");
+    }
   }
 
   // ✅ DELETE /schedules/:id
